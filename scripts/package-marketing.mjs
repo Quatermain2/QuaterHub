@@ -1,0 +1,3 @@
+import fs from 'node:fs';
+const b='marketing-src/.offline-build/';const css=fs.readFileSync(b+fs.readdirSync(b).find(f=>f.endsWith('.css')),'utf8');const js=fs.readFileSync(b+'dashboard.js','utf8').replaceAll('</script','<\\/script');const bridge=fs.readFileSync('public/marketing-transport.js','utf8');
+fs.writeFileSync('public/marketing.html','<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Маркетинг</title><style>'+css+'</style></head><body><div id="root"></div><script>'+bridge+'</script><script>'+js+'</script></body></html>');

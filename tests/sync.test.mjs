@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {reconcileTask,updateCalendarSnapshot} from '../server/sync-contract.js';
+const base=['Задача','Личное','Средний','Не начато','','Шаг'];
+test('Notion changes flow to dashboard, dashboard changes flow to Notion',()=>{const n=[...base];n[5]='Новый шаг';assert.equal(reconcileTask(base,n,base).action,'pull_notion');assert.equal(reconcileTask(n,base,base).action,'push_notion');});
+test('conflicting edits preserve both sides',()=>{const a=[...base],b=[...base];a[5]='А';b[5]='Б';const result=reconcileTask(a,b,base);assert.equal(result.action,'conflict');assert.deepEqual(result.local,a);assert.deepEqual(result.remote,b);});
+test('deferred status survives Notion Not started mapping',()=>{const a=[...base];a[3]='Отложено';assert.equal(reconcileTask(a,base,a).action,'agree');});
+test('calendar replacement preserves manual events and historical dates',()=>{const row=(id,source,date)=>[date,'','09:00','','Событие','','','','',id,'',source];const old=[[],row('manual','Штаб','2026-09-09'),row('past','Google Calendar','2026-08-01'),row('cancelled','Google Calendar','2026-09-09')];const next=updateCalendarSnapshot(old,[row('new','Google Calendar','2026-09-10')],'2026-09-09','2026-10-09');assert.deepEqual(new Set(next.slice(1).map(r=>r[9])),new Set(['manual','past','new']));});

@@ -1,0 +1,7 @@
+node_modules/
+.vercel/
+.env*
+!.env.example
+marketing-src/.offline-build/
+private/
+*-snapshot.json
