@@ -1,4 +1,5 @@
-// Three-way merge contract used by the Notion synchronization worker.
+// Three-way merge contract prepared for the Notion synchronization worker.
+// The worker is not connected in this migration candidate.
 // All arguments are normalized A:F task records. Never silently resolve conflicts.
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 export function reconcileTask(local,remote,baseline){

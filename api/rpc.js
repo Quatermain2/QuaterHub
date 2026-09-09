@@ -16,7 +16,9 @@ export default async function handler(req,res){try{
  else if(name==='saveTableRow'){
   const p=args[0];if(!Object.hasOwn(data.tables,p?.table)||!Number.isInteger(p.row)||p.row<1||p.row>data.tables[p.table].length+1||!Array.isArray(p.values)||p.values.length>26||p.values.some(x=>typeof x!=='string'||x.length>20000))throw Error('Некорректная строка');
   data.tables[p.table][p.row-1]=p.values;value={ok:true};
- }else {const core=runtime(data.tables,data.richLinks);value=core[name](...args);}
+ }else {const core=runtime(data.tables,data.richLinks);value=core[name](...args);
+  if(name==='refreshCalendarAndGetDashboardData')value.warnings.push('Загружены сохранённые события. Автоматическая синхронизация Google Calendar ещё не подключена.');
+ }
  let version=row.version;
  if(writes.has(name)){
   const result=await sb('/rest/v1/rpc/shtab_save_workspace',token,{method:'POST',body:JSON.stringify({workspace:row.id,expected:row.version,payload:data})});
