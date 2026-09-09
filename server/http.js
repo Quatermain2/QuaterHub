@@ -1,5 +1,6 @@
 import {SUPABASE_URL,SUPABASE_KEY} from './config.js';
 export async function sb(path,token,options={}){
+ if(!SUPABASE_URL||!SUPABASE_KEY)throw Object.assign(Error('Отдельная база штаба ещё не подключена'),{status:503});
  const r=await fetch(SUPABASE_URL+path,{...options,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{}),...options.headers},signal:AbortSignal.timeout(18000)});
  const text=await r.text();let data;try{data=JSON.parse(text)}catch{data={message:text}}
  if(!r.ok)throw Object.assign(Error(data.msg||data.message||data.error_description||'Сервис временно недоступен'),{status:r.status});return data;
