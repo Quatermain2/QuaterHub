@@ -977,10 +977,10 @@
           setSync('error', 'Частичная связь · ' + data.syncedAt);
           showToast(warnings[0], true);
         } else {
-          setSync('ok', (refreshCalendar ? 'Календарь обновлён ' : 'Синхронизировано ') + data.syncedAt);
+          setSync('ok', 'Данные загружены ' + data.syncedAt);
         }
-        if (refreshCalendar && data.calendarEventCount != null && !warnings.length) {
-          showToast('Google Calendar обновлён · ' + data.calendarEventCount + ' событий');
+        if (refreshCalendar && data.calendarSyncedAt && !warnings.length) {
+          showToast('Google Calendar · последнее обновление '+new Date(data.calendarSyncedAt).toLocaleString('ru-RU')+' · обмен раз в час');
         }
       } catch (error) {
         setSync('error', serverResponded ? 'Ошибка интерфейса' : 'Нет связи');

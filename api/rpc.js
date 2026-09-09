@@ -17,7 +17,11 @@ export default async function handler(req,res){try{
   const p=args[0];if(!Object.hasOwn(data.tables,p?.table)||!Number.isInteger(p.row)||p.row<1||p.row>data.tables[p.table].length+1||!Array.isArray(p.values)||p.values.length>26||p.values.some(x=>typeof x!=='string'||x.length>20000))throw Error('Некорректная строка');
   data.tables[p.table][p.row-1]=p.values;value={ok:true};
  }else {const core=runtime(data.tables,data.richLinks);value=core[name](...args);
-  if(name==='refreshCalendarAndGetDashboardData')value.warnings.push('Загружены сохранённые события. Автоматическая синхронизация Google Calendar ещё не подключена.');
+  if(name==='getDashboardData'||name==='refreshCalendarAndGetDashboardData'){
+   value.integrations=Object.fromEntries(['notion','calendar'].map(key=>[key,{status:data.integrations?.[key]?.status||'pending',lastSuccess:data.integrations?.[key]?.lastSuccess||null}]));
+   value.calendarSyncedAt=data.integrations?.calendar?.lastSuccess||null;
+   if(name==='refreshCalendarAndGetDashboardData'&&!value.calendarSyncedAt)value.warnings.push('Первое обновление Google Calendar ещё не завершено.');
+  }
  }
  let version=row.version;
  if(writes.has(name)){
