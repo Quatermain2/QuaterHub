@@ -6,13 +6,19 @@ export async function sb(path,token,options={}){
  if(!r.ok)throw Object.assign(Error(data.msg||data.message||data.error_description||'Сервис временно недоступен'),{status:r.status});return data;
 }
 function cookies(req){return Object.fromEntries((req.headers.cookie||'').split(';').map(x=>x.trim().split(/=(.*)/s).slice(0,2)));}
+// Renewed on every successful token refresh; closing the browser keeps the session.
+const REMEMBER_DEVICE_SECONDS=365*24*60*60;
 export function setSession(res,s){const secure=process.env.VERCEL?' Secure;':'';res.setHeader('Set-Cookie',[
  `shtab_access=${s.access_token||''}; HttpOnly;${secure} SameSite=Lax; Path=/; Max-Age=${s.expires_in||0}`,
- `shtab_refresh=${s.refresh_token||''}; HttpOnly;${secure} SameSite=Lax; Path=/api; Max-Age=${s.refresh_token?2592000:0}`]);}
+ `shtab_refresh=${s.refresh_token||''}; HttpOnly;${secure} SameSite=Lax; Path=/api; Max-Age=${s.refresh_token?REMEMBER_DEVICE_SECONDS:0}`]);}
 export async function authenticated(req,res){
  const c=cookies(req);let token=c.shtab_access;
  if(token){try{const user=await sb('/auth/v1/user',token);if(!user.email_confirmed_at)throw Error('Подтвердите почту');return {token,user};}catch(e){if(e.status!==401&&e.status!==403)throw e;}}
- if(c.shtab_refresh){const s=await sb('/auth/v1/token?grant_type=refresh_token',null,{method:'POST',body:JSON.stringify({refresh_token:c.shtab_refresh})});if(!s.user?.email_confirmed_at)throw Error('Подтвердите почту');setSession(res,s);return {token:s.access_token,user:s.user};}
+ if(c.shtab_refresh){
+  let s;try{s=await sb('/auth/v1/token?grant_type=refresh_token',null,{method:'POST',body:JSON.stringify({refresh_token:c.shtab_refresh})});}
+  catch(e){if([400,401,403].includes(e.status))throw Object.assign(Error('Войдите в штаб'),{status:401});throw e;}
+  if(!s.user?.email_confirmed_at)throw Error('Подтвердите почту');setSession(res,s);return {token:s.access_token,user:s.user};
+ }
  throw Object.assign(Error('Войдите в штаб'),{status:401});
 }
 export function guard(req){if(req.method!=='POST')throw Object.assign(Error('Метод не поддерживается'),{status:405});const origin=req.headers.origin;if(origin&&new URL(origin).host!==req.headers.host)throw Object.assign(Error('Запрос отклонён'),{status:403});if(Buffer.byteLength(JSON.stringify(req.body||{}))>1500000)throw Object.assign(Error('Слишком большой запрос'),{status:413});}
