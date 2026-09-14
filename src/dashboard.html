@@ -645,6 +645,7 @@
       .nav button { padding-inline:14px; }
     }
   </style>
+  <link rel="stylesheet" href="/executive.css?v=20260914">
 </head>
 <body>
   <div class="loading" id="loading">
@@ -664,13 +665,13 @@
       <div class="section-navigation">
         <span class="nav-hint">Разделы штаба · листайте →</span>
       <nav class="nav" aria-label="Разделы штаба">
-        <button class="active" aria-current="page" data-view="today">Сегодня</button>
-        <button data-view="week">Неделя</button>
-        <button data-view="calendar">Календарь</button>
-        <button data-view="tasks">Задачи</button>
-        <button data-view="rounds">Обходы</button>
-        <button data-view="ai-lab">ИИ‑лаборатория</button>
-        <button data-view="smm">SMM</button><button data-view="marketing">Маркетинг</button>
+        <button class="active" aria-current="page" data-view="today"><img src="/icons/sun.svg" alt="" width="21" height="21">Сегодня</button>
+        <button data-view="week"><img src="/icons/calendar.svg" alt="" width="21" height="21">Неделя</button>
+        <button data-view="calendar"><img src="/icons/calendar.svg" alt="" width="21" height="21">Календарь</button>
+        <button data-view="tasks"><img src="/icons/check.svg" alt="" width="21" height="21">Задачи</button>
+        <button data-view="rounds"><img src="/icons/heart.svg" alt="" width="21" height="21">Обходы</button>
+        <button data-view="ai-lab"><img src="/icons/spark.svg" alt="" width="21" height="21">ИИ‑лаборатория</button>
+        <button data-view="smm"><img src="/icons/layers.svg" alt="" width="21" height="21">SMM</button><button data-view="marketing"><img src="/icons/rocket.svg" alt="" width="21" height="21">Маркетинг</button>
       </nav>
       </div>
 
@@ -699,6 +700,7 @@
           <span class="summary-save" id="summarySave">данные загружены</span>
         </div>
 
+        <div class="executive-grid" aria-label="Быстрый обзор дня"><button type="button" class="exec-tile exec-wide exec-hero" data-view="calendar"><span class="exec-top">Сегодня<span class="exec-icon"><img src="/icons/sun.svg" alt="" width="35" height="35"></span></span><strong class="exec-value exec-clock" id="executiveClock">—</strong><span class="exec-hero-foot"><span class="exec-note" id="executiveDay">Московское время</span><span class="exec-note" id="executiveEvents">Загрузка событий</span></span></button><article class="exec-tile exec-wide exec-next"><span class="exec-top">Сейчас / дальше</span><div id="nowNext"></div></article><button type="button" class="exec-tile" data-view="tasks"><span class="exec-top"><span class="exec-icon"><img src="/icons/flag.svg" alt="" width="35" height="35"></span><span class="exec-arrow" aria-hidden="true">↗</span></span><strong class="exec-value" id="executiveHigh">—</strong><span class="exec-label">Требуют внимания</span><span class="exec-note">Задачи высокого приоритета</span></button><button type="button" class="exec-tile" data-view="rounds"><span class="exec-top"><span class="exec-icon"><img src="/icons/heart.svg" alt="" width="35" height="35"></span><span class="exec-arrow" aria-hidden="true">↗</span></span><strong class="exec-value">08 / 21</strong><span class="exec-label">Обходы</span><span class="exec-note">Утренняя сверка · вечерние итоги</span></button><button type="button" class="exec-tile" data-view="tasks"><span class="exec-top"><span class="exec-icon"><img src="/icons/check.svg" alt="" width="35" height="35"></span><span class="exec-arrow" aria-hidden="true">↗</span></span><strong class="exec-value" id="executiveTasks">—</strong><span class="exec-label">Активные задачи</span><span class="exec-note">Статусы и следующие действия</span></button><button type="button" class="exec-tile" data-view="marketing"><span class="exec-top"><span class="exec-icon"><img src="/icons/rocket.svg" alt="" width="35" height="35"></span><span class="exec-arrow" aria-hidden="true">↗</span></span><strong class="exec-value">→</strong><span class="exec-label">Маркетинг</span><span class="exec-note">Проекты, этапы и результаты</span></button><button type="button" class="exec-tile exec-mini" data-view="week"><span class="exec-icon"><img src="/icons/calendar.svg" alt="" width="35" height="35"></span><span class="exec-label">Неделя</span></button><button type="button" class="exec-tile exec-mini" data-view="calendar"><span class="exec-icon"><img src="/icons/calendar.svg" alt="" width="35" height="35"></span><span class="exec-label">Календарь</span></button><button type="button" class="exec-tile exec-mini" data-view="smm"><span class="exec-icon"><img src="/icons/layers.svg" alt="" width="35" height="35"></span><span class="exec-label">SMM</span></button><button type="button" class="exec-tile exec-mini" data-view="ai-lab"><span class="exec-icon"><img src="/icons/spark.svg" alt="" width="35" height="35"></span><span class="exec-label">ИИ-лаборатория</span></button></div>
         <div class="today-layout">
           <div class="primary-column">
             <article class="card results-card">
@@ -718,13 +720,10 @@
           </div>
 
           <aside class="side-column">
-            <article class="card now-card">
-              <p class="eyebrow">Сейчас / дальше</p>
-              <div id="nowNext"><div class="schedule-empty">Определяю положение в ленте дня…</div></div>
-            </article>
+
 
             <article class="card priorities-card">
-              <div class="compact-head"><div><p class="eyebrow">Фокус</p><h2>Приоритеты</h2></div><button type="button" data-view="tasks">Все задачи</button></div>
+              <div class="compact-head"><div><p class="eyebrow">Фокус</p><h2>Приоритеты</h2></div><button type="button" data-view="tasks"><img src="/icons/check.svg" alt="" width="21" height="21">Все задачи</button></div>
               <div class="priority-list" id="priorityList"></div>
             </article>
 
@@ -909,6 +908,7 @@
         if (state.data && state.activeView === 'today') {
           const events = (state.data.events || []).filter(event => event.date === state.data.date.iso);
           renderTodaySchedule(state.data.schedule || [], events);
+          renderExecutive();
         }
       }, 30000);
     }
@@ -1043,7 +1043,24 @@
       renderWeek(data.week, data.date.dayIndex, data.events || [], data.date.iso);
       renderCalendar(data.calendarEvents || []);
       renderTasks();
+      renderExecutive();
       fillDaily(data.daily);
+    }
+
+    function renderExecutive() {
+      const data = state.data;
+      if (!data) return;
+      document.getElementById('executiveClock').textContent = new Date().toLocaleTimeString('ru-RU', {timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'});
+      document.getElementById('executiveDay').textContent = 'Московское время';
+      const count = (data.events || []).filter(event => event.date === data.date.iso).length;
+      document.getElementById('executiveEvents').textContent = count + ' ' + pluralize(count, ['событие', 'события', 'событий']) + ' · ' + data.date.title;
+      const tasks = data.tasks || [];
+      const high = tasks.filter(t => t.priority === 'Высокий' && t.status !== 'Готово').length;
+      const active = tasks.filter(t => !['Готово','Отменено'].includes(t.status)).length;
+      document.getElementById('executiveHigh').textContent = high;
+      document.getElementById('executiveTasks').textContent = active;
+      document.getElementById('highCount').textContent = high;
+      document.getElementById('activeCount').textContent = active;
     }
 
     function fillDaily(daily) {
@@ -1260,6 +1277,7 @@
     function renderTasks() {
       const root = document.getElementById('taskTable');
       const tasks = filteredTasks();
+      renderExecutive();
       const header = '<div class="task-row header"><div class="task-cell">Задача</div><div class="task-cell">Направление</div><div class="task-cell">Приоритет</div><div class="task-cell">Статус</div><div class="task-cell">Следующее действие</div></div>';
       if (!tasks.length) {
         root.innerHTML = header + '<div class="empty-state">По выбранному фильтру задач нет.</div>';
@@ -1267,7 +1285,7 @@
       }
       root.innerHTML = header + tasks.map(task => {
         const priorityClass = task.priority === 'Высокий' ? 'high' : task.priority === 'Низкий' ? 'low' : 'medium';
-        return '<div class="task-row" data-row="' + task.row + '">' +
+        return '<div class="task-row ' + (task.status === 'Готово' ? 'is-done' : priorityClass === 'high' ? 'is-high' : '') + '" data-row="' + task.row + '">' +
           '<div class="task-cell"><div class="task-title ' + (task.status === 'Готово' ? 'done' : '') + '">' + escapeHtml(task.title) + '</div><small>' + escapeHtml(task.due ? 'Срок: ' + task.due : task.source || '') + '</small></div>' +
           '<div class="task-cell">' + escapeHtml(task.direction || '—') + '</div>' +
           '<div class="task-cell"><span class="priority ' + priorityClass + '">' + escapeHtml(task.priority) + '</span></div>' +
