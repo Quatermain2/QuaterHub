@@ -9,4 +9,4 @@ body{background:var(--canvas);color:var(--ink);font-family:Inter,ui-sans-serif,-
 @media(prefers-reduced-motion:reduce){.exec-tile{transition:none}.exec-tile:hover,.exec-tile:active{transform:none}}
 .exec-tile[data-view=rounds] .exec-value{font-size:30px;white-space:nowrap;margin-top:23px;margin-bottom:15px}.exec-tile[data-view=tasks]:has(#executiveHigh){--section-color:#d49d6e}.date-control button{display:inline-flex;align-items:center;justify-content:center;color:var(--blue)}.risk-card textarea,.note-card textarea{font-size:14px}.side-column .priorities-card{grid-column:1/-1}
 
-.brand-emblem{background:#fff url("/icon-512.png") center/cover no-repeat!important;border-color:#2362df55!important}
+.brand-emblem{background:#fff url("/urorock-emblem-512.png") center/cover no-repeat!important;border-color:#2362df55!important}
